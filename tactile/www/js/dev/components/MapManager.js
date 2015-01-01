@@ -1,5 +1,6 @@
 var MapManager = {
     init: function(){
+
         var map;
 
         // onSuccess Callback
@@ -8,6 +9,8 @@ var MapManager = {
         //
         var onSuccess = function(position) {
 
+            console.log('Working from '+position.coords.latitude+', '+position.coords.longitude);
+
             var myLatlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
             var mapOptions = {
@@ -15,7 +18,26 @@ var MapManager = {
                 center: myLatlng
             };
 
-            var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+            map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+
+            $.getJSON( "http://bryson.mojostuff.com/tactile/client.php?u=$59@", function( data ) {
+                $.each( data, function( key, val ) {
+                    var obj = jQuery.parseJSON( JSON.stringify(val) );
+
+                    console.log(obj.lat);
+                    var markerLatLong = new google.maps.LatLng(obj.lat, obj.lng);
+
+                    var marker = new google.maps.Marker({
+                        position: markerLatLong,
+                        map: map,
+                        title: 'asdf'
+                    });
+
+                    // To add the marker to the map, call setMap();
+                    marker.setMap(map);
+                });
+            });
 
             var marker = new google.maps.Marker({
                 position: myLatlng,
